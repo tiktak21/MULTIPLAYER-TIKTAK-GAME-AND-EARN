@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tik-Tak-Toe Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        .developer-info {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            font-size: 18px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+            background-color: #333;
+            border: 5px solid #444;
+            border-radius: 10px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: #666;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .cell:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="developer-info">
+        <p>Developed by Subham</p>
+        <p>Email: <a href="mailto:sahsubhamm33@gmail.com" style="color: #fff; text-decoration: none;">sahsubhamm33@gmail.com</a></p>
+    </div>
+    <h1>Tik-Tak-Toe Game</h1>
+    <div class="container">
+        <div class="board" id="board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
+        <p id="result" style="font-size: 24px; margin-top: 20px;"></p>
+        <button id="reset">Reset Game</button>
+    </div>
+
+    <script>
+        const board = document.getElementById("board");
+        const cells = document.querySelectorAll(".cell");
+        const result = document.getElementById("result");
+        const resetButton = document.getElementById("reset");
+        let currentPlayer = "X";
+        let moves = 0;
+        let gameOver = false;
+
+        function checkWinner() {
+            const winPatterns = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6],
+            ];
+
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (cells[a].textContent && cells[a].textContent === cells[b].textContent && cells[a].textContent === cells[c].textContent) {
+                    cells[a].style.backgroundColor = "#00FF00";
+                    cells[b].style.backgroundColor = "#00FF00";
+                    cells[c].style.backgroundColor = "#00FF00";
+                    result.textContent = `${currentPlayer} wins!`;
+                    gameOver = true;
+                }
+            }
+
+            if (!gameOver && moves === 9) {
+                result.textContent = "It's a draw!";
+                gameOver = true;
+            }
+        }
+
+        function handleClick(e) {
+            if (gameOver || e.target.textContent !== "") {
+                return;
+            }
+
+            e.target.textContent = currentPlayer;
+            moves++;
+            checkWinner();
+
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+        }
+
+        function resetGame() {
+            cells.forEach(cell => {
+                cell.textContent = "";
+                cell.style.backgroundColor = "#666";
+            });
+
+            currentPlayer = "X";
+            moves = 0;
+            gameOver = false;
+            result.textContent = "";
+        }
+
+        cells.forEach(cell => {
+            cell.addEventListener("click", handleClick);
+        });
+
+        resetButton.addEventListener("click", resetGame);
+    </script>
+</body>
+</html>
